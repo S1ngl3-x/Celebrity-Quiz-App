@@ -1,4 +1,4 @@
-#Celebrity Quiz
+# Celebrity Quiz
 
 ## Description
 Project's [website](https://via-celebrity-quiz.vercel.app).
