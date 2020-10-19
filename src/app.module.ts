@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import * as Joi from '@hapi/joi';
 import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module';
+import { QuizModule } from './quiz/quiz.module';
+import { Connection } from 'typeorm';
 
 @Module({
   imports: [
@@ -16,8 +17,12 @@ import { ConfigModule } from '@nestjs/config';
         PORT: Joi.number(),
       }),
     }),
+    DatabaseModule,
+    QuizModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
