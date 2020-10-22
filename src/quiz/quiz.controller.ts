@@ -1,18 +1,20 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import Quiz from './quiz.entity';
 import CreateQuizDto from './dto/createQuiz.dto';
+import JwtAuthenticationGuard from '../authentication/guards/jwtAuthentication';
 
 @Controller('quiz')
+@UseGuards(JwtAuthenticationGuard)
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 
-  @Post()
+  @Post('/')
   create(@Body() quizDto: CreateQuizDto): Promise<Quiz> {
     return this.quizService.create(quizDto);
   }
 
-  @Get()
+  @Get('/')
   findAll(): Promise<Quiz[]> {
     return this.quizService.findAll();
   }
