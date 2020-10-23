@@ -16,6 +16,12 @@ class User {
 
   @OneToMany(() => Quiz, (quiz: Quiz) => quiz.user)
   public quizzes: Quiz[];
+
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public refreshToken?: string;
 }
 
 export default User;

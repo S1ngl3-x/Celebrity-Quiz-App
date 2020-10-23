@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import User from './user.entity';
 import { Repository } from 'typeorm';
 import CreateUserDto from './dto/createUserDto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -27,5 +28,28 @@ export class UserService {
     const user = await this.userRepository.findOne({ id });
     if (user) return user;
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+  async setCurrentRefreshToken(refreshTokenInput: string, userId: number) {
+    const refreshToken = await bcrypt.hash(refreshTokenInput, 10);
+    await this.userRepository.update(userId, {
+      refreshToken,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.findById(userId);
+
+    const isRefreshTokenMatching = await bcrypt.compare(refreshToken, user.refreshToken);
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.userRepository.update(userId, {
+      refreshToken: null,
+    });
   }
 }
