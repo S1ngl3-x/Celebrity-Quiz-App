@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,7 +17,7 @@ import CreateQuizDto from './dto/createQuiz.dto';
 import JwtAuthenticationGuard from '../authentication/guards/jwtAuthentication';
 import FindOneParams from '../utils/params/findOneParams';
 import UpdateQuizDto from './dto/updateQuiz.dto';
-import { ExcludeNullInterceptor } from '../utils/interceptors/excludeNull.interceptor';
+import RequestWithUser from '../authentication/types/requestWithUser';
 
 @Controller('quiz')
 @UseGuards(JwtAuthenticationGuard)
@@ -25,8 +26,8 @@ export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 
   @Post('/')
-  create(@Body() quizDto: CreateQuizDto): Promise<Quiz> {
-    return this.quizService.create(quizDto);
+  create(@Body() quizDto: CreateQuizDto, @Req() req: RequestWithUser): Promise<Quiz> {
+    return this.quizService.create(quizDto, req.user);
   }
 
   @Get('/')

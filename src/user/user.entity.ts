@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import Quiz from '../quiz/quiz.entity';
 
 @Entity()
 class User {
@@ -12,6 +13,9 @@ class User {
   @Column()
   @Exclude()
   public password: string;
+
+  @OneToMany(() => Quiz, (quiz: Quiz) => quiz.user)
+  public quizzes: Quiz[];
 }
 
 export default User;

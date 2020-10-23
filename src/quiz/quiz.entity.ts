@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import User from '../user/user.entity';
 
 @Entity()
 class Quiz {
@@ -10,6 +11,10 @@ class Quiz {
 
   @Column({ nullable: true })
   public result?: number;
+
+  @ManyToOne(() => User, (user: User) => user.quizzes)
+  @JoinTable()
+  public user: User;
 }
 
 export default Quiz;
