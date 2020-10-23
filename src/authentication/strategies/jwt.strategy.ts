@@ -18,6 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           return request?.cookies?.Authentication;
         },
       ]),
+      ignoreExpiration: true, // TODO - uncomment in production
       secretOrKey: configService.get('JWT_SECRET'),
     });
   }
