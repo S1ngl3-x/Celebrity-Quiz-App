@@ -1,4 +1,14 @@
-import { Body, Req, Controller, HttpCode, Post, UseGuards, Get } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import CreateUserDto from '../user/dto/createUserDto';
 import RequestWithUser from './types/requestWithUser';
@@ -7,6 +17,7 @@ import JwtAuthenticationGuard from './guards/jwtAuthentication';
 import User from '../user/user.entity';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
@@ -34,8 +45,6 @@ export class AuthenticationController {
   @UseGuards(JwtAuthenticationGuard)
   @Get()
   authenticate(@Req() request: RequestWithUser) {
-    const user = request.user;
-    user.password = undefined;
-    return user;
+    return request.user;
   }
 }

@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Quiz from './quiz.entity';
 import { Repository } from 'typeorm';
 import CreateQuizDto from './dto/createQuiz.dto';
 import UpdateQuizDto from './dto/updateQuiz.dto';
+import QuizNotFoundException from './exceptions/quizNotFound.exception';
 
 @Injectable()
 export class QuizService {
@@ -25,19 +26,18 @@ export class QuizService {
   async findById(id: number): Promise<Quiz> {
     const quiz = await this.quizRepository.findOne(id);
     if (quiz) return quiz;
-    throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
+    throw new QuizNotFoundException(id);
   }
 
   async update(id: number, quizDto: UpdateQuizDto): Promise<Quiz> {
     await this.quizRepository.update(id, quizDto);
     const updatedQuiz = await this.quizRepository.findOne(id);
     if (updatedQuiz) return updatedQuiz;
-    throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
+    throw new QuizNotFoundException(id);
   }
 
   async delete(id: number): Promise<void> {
     const deleteQuiz = await this.quizRepository.delete(id);
-    if (!deleteQuiz.affected)
-      throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
+    if (!deleteQuiz.affected) throw new QuizNotFoundException(id);
   }
 }

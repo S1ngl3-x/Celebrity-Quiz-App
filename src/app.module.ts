@@ -6,6 +6,8 @@ import { QuizModule } from './quiz/quiz.module';
 import { Connection } from 'typeorm';
 import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { APP_FILTER } from '@nestjs/core';
+import ExceptionsLoggerFilter from './utils/exceptionsLogger.filter';
 
 @Module({
   imports: [
@@ -27,7 +29,12 @@ import { AuthenticationModule } from './authentication/authentication.module';
     AuthenticationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionsLoggerFilter,
+    },
+  ],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

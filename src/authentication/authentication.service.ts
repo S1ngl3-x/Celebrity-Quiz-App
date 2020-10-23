@@ -18,12 +18,10 @@ export class AuthenticationService {
   public async register(userDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
     try {
-      const createdUser = await this.userService.create({
+      return await this.userService.create({
         ...userDto,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
-      return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
@@ -36,7 +34,6 @@ export class AuthenticationService {
     try {
       const user = await this.userService.findByEmail(email);
       await this.verifyPassword(password, user.password);
-      user.password = undefined;
       return user;
     } catch (error) {
       throw new HttpException('Wrong credentials', HttpStatus.BAD_REQUEST);
