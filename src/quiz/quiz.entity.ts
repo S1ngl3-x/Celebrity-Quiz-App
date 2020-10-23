@@ -7,6 +7,9 @@ class Quiz {
 
   @Column()
   public content: string;
+
+  @Column({ nullable: true })
+  public result?: number;
 }
 
 export default Quiz;

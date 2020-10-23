@@ -3,10 +3,12 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ExcludeNullInterceptor } from './utils/interceptors/excludeNull.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe()); // validate incoming data
+  app.useGlobalInterceptors(new ExcludeNullInterceptor()); // strip null values from returned data
   app.use(cookieParser());
 
   // init swagger

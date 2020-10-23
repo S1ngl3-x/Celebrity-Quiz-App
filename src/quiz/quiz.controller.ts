@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import Quiz from './quiz.entity';
@@ -14,9 +16,11 @@ import CreateQuizDto from './dto/createQuiz.dto';
 import JwtAuthenticationGuard from '../authentication/guards/jwtAuthentication';
 import FindOneParams from '../utils/params/findOneParams';
 import UpdateQuizDto from './dto/updateQuiz.dto';
+import { ExcludeNullInterceptor } from '../utils/interceptors/excludeNull.interceptor';
 
 @Controller('quiz')
 @UseGuards(JwtAuthenticationGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 
